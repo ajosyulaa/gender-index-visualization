@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<title>Gender Equality Index</title>
+<meta charset="UTF-8">
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/bootstrap-slider.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/css/bootstrap-slider.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<style type="text/css">
+/* 13. Basic Styling with CSS */
+
+/* Style the lines by removing the fill and applying a stroke */
+.line {
+    fill: none;
+    stroke: #ffab00;
+    stroke-width: 3;
+}
+
+.line2 {
+    fill: none;
+    stroke: red;
+    stroke-width: 3;
+}
+
+/* Style the dots by assigning a fill and stroke */
+.dot {
+    /*fill: #ffab00;*/
+    stroke: #fff;
+}
+
+.dot2 {
+    /*fill: red;*/
+    stroke: #fff;
+}
+
+.focus.line {
+    stroke: steelblue;
+    stroke-dasharray: 2,5;
+    stroke-width: 2;
+    opacity: 0.5;
+}
+
+</style>
+
+<style type="text/css">
+    .range {
+  position: relative;
+  width: 100%;
+  height: 5px;
+}
+
+.range input {
+  width: 100%;
+  position: absolute;
+  top: 2px;
+  height: 0;
+  -webkit-appearance: none;
+}
+.range input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: -8px 0  0;
+  border-radius: 50%;
+  background: #9B2377;
+  cursor: pointer;
+  border: 0 !important;
+}
+.range input::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  margin: -8px 0  0;
+  border-radius: 50%;
+  background: #9B2377;
+  cursor: pointer;
+  border: 0 !important;
+}
+.range input::-ms-thumb {
+  width: 18px;
+  height: 18px;
+  margin: -8px 0  0;
+  border-radius: 50%;
+  background: #9B2377;
+  cursor: pointer;
+  border: 0 !important;
+}
+.range input::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  background: #b2b2b2;
+}
+.range input::-moz-range-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  background: #b2b2b2;
+}
+.range input::-ms-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  background: #b2b2b2;
+}
+.range input:focus {
+  background: none;
+  outline: none;
+}
+.range input::-ms-track {
+  width: 100%;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+.range-labels {
+  margin: 18px -41px 0;
+  padding: 0;
+  list-style: none;
+}
+.range-labels li {
+  position: relative;
+  float: left;
+  width: 90.25px;
+  text-align: center;
+  color: #b2b2b2;
+  font-size: 14px;
+  cursor: pointer;
+}
+.range-labels li::before {
+  position: absolute;
+  top: -25px;
+  right: 0;
+  left: 0;
+  content: "";
+  margin: 0 auto;
+  width: 9px;
+  height: 9px;
+  background: #b2b2b2;
+  border-radius: 50%;
+}
+.range-labels .active {
+  color: #9B2377;
+}
+.range-labels .selected::before {
+  background: #9B2377;
+}
+.range-labels .active.selected::before {
+  display: none;
+}
+
+</style>
+
+
+
+<body>
+    <script type="text/javascript" src="http://d3js.org/d3.v4.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='slider.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='map_render.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='index_bar.js') }}"></script>
+    <!--script type="text/javascript" src="{{ url_for('static', filename='line_chart.js') }}"></script-->
+    <script type="text/javascript" src="{{ url_for('static', filename='line_chart2.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='heat_map.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='household_scatter_plot.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='scatter_plot.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='pie_chart.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='diverging_bar.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='gender_equality.js') }}"></script>
+
+    <div class="container-fluid pl-5 pr-5">
+        <div class="row">
+    <h3 class="text-center mt-4">Gender Equality Index</h3>
+    </div>
+    <div class="row">
+    <h6 class="text-center">Measuring gender equality in the European Union (2005 - 2015)</h6>
+    </div>
+    <!--nav class="navbar navbar-light bg-light w-100">
+                        <div class="btn-group">
+                              <button id="dropdown_btn" type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overall</button>
+                              <div class="dropdown-menu" id="domain_drop">
+                                <a class="dropdown-item" href="#">Overall</a>
+                                <a class="dropdown-item" href="#">Work</a>
+                                <a class="dropdown-item" href="#">Money</a>
+                                <a class="dropdown-item" href="#">Knowledge</a>
+                                <a class="dropdown-item" href="#">Time</a>
+                                <a class="dropdown-item" href="#">Power</a>
+                                <a class="dropdown-item" href="#">Health</a>
+                              </div>
+                        </div>
+
+                        <div style="padding-top: 25px">
+                        <div class="range">
+                          <input type="range" id="newSlider" min="1" max="4" steps="1" value="1" />
+                        </div>
+
+                        <ul class="range-labels">
+                          <li class="active selected">2005</li>
+                          <li>2010</li>
+                          <li>2012</li>
+                          <li>2015</li>
+                        </ul>
+                    </div>
+
+                        
+
+                    </nav-->
+    </div>
+    <br>
+    
+    <div class="container-fluid mt-0 pl-5 pr-5">
+        <div class="row vh-100">
+            <div class="container-fluid">
+                <div class="row">
+                    <h5 class="text-center w-100">Gender Equality Across Domains</h5>
+                </div>
+                <div class="row">
+                    <nav class="navbar navbar-light fixed-top bg-light w-100">
+                        <div class="btn-group">
+                              <button id="dropdown_btn" type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overall</button>
+                              <div class="dropdown-menu" id="domain_drop">
+                                <a class="dropdown-item" href="#">Overall</a>
+                                <a class="dropdown-item" href="#">Work</a>
+                                <a class="dropdown-item" href="#">Money</a>
+                                <a class="dropdown-item" href="#">Knowledge</a>
+                                <a class="dropdown-item" href="#">Time</a>
+                                <a class="dropdown-item" href="#">Power</a>
+                                <a class="dropdown-item" href="#">Health</a>
+                              </div>
+                        </div>
+
+                        <div style="padding-top: 25px">
+                        <div class="range">
+                          <input type="range" id="newSlider" min="1" max="4" steps="1" value="1" />
+                        </div>
+
+                        <ul class="range-labels">
+                          <li class="active selected">2005</li>
+                          <li>2010</li>
+                          <li>2012</li>
+                          <li>2015</li>
+                        </ul>
+                    </div>
+
+                        
+
+                    </nav>
+                </div>
+                <div class="row h-75">
+                    <div class="border col-6">
+                        <br>
+                        <svg id="vis1" class="h-75 col-12 mt-4">
+                        </svg>
+                        <h6 id="caption" class="text-center">Gender Equality Index</h6>
+                    </div>
+
+                    <div class="border col-6">
+                        <svg id="vis3" class="h-75 col-12 mt-4 mx-auto">
+                        </svg>
+                        <h6 class="text-center mt-2" id="caption3">Distribution Across Domains</h6>
+                    </div>
+                </div>
+            </div>
+       
+
+        </div>
+        <div class="row mt-0">
+            <div class="container-fluid">
+                <div class="row">
+                    <h5 class="text-center w-100">Trends Across Domains</h5>
+                </div>
+                <div class="row border vh-100 mt-4">
+                    <div class="mt-0 col-6 h-100">
+                            <svg id="vis2" class="h-75 col-12 mt-4">
+                            </svg>
+                            <h6 id="caption2" class="text-center">Overall</h6>
+                    </div>
+                    <div class="mt-0 h-100 col-6 text-center">
+                        <div class="col-sm text-left">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked="false">
+                          <label class="form-check-label" for="exampleRadios1">
+                            Compare domain with EU-28
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+                          <label class="form-check-label" for="exampleRadios2">
+                            Compare all domains for country
+                          </label>
+                          <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="Work" id="defaultCheck1" disabled checked>
+                              <label class="form-check-label" for="defaultCheck1">
+                                Work
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="Money" id="defaultCheck2" disabled checked>
+                              <label class="form-check-label" for="defaultCheck2">
+                                Money
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="Knowledge" id="defaultCheck3" disabled checked>
+                              <label class="form-check-label" for="defaultCheck3">
+                                Knowledge
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="Time" id="defaultCheck4" disabled checked>
+                              <label class="form-check-label" for="defaultCheck4">
+                                Time
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="Power" id="defaultCheck5" disabled checked>
+                              <label class="form-check-label" for="defaultCheck5">
+                                Power
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="Health" id="defaultCheck6" disabled checked>
+                              <label class="form-check-label" for="defaultCheck6">
+                                Health
+                              </label>
+                            </div>
+                            
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+
+        <!--/div-->
+
+        <!--div class="row vh-100">
+            <div class=" border mt-4 col-6 h-50">
+                    
+                    <svg id="vis5" class="h-75 col-12 mt-4">
+                    </svg>
+                    <h6 id="caption5" class="text-center">Overall</h6>
+            </div>
+            <div class="col-6">
+                <div class="btn-group">
+                      <button id="dropdown_btn_indicator1" type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select Indicator</button>
+                      <div class="dropdown-menu" id="domain_drop_indicator1">
+
+                      </div>
+                </div>
+                <div class="btn-group">
+                      <button id="dropdown_btn_indicator2" type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select Indicator</button>
+                      <div class="dropdown-menu" id="domain_drop_indicator2">
+                      </div>
+                </div>
+            </div>
+        </div-->
+
+        <div class="row vh-100 mt-4">
+            <div class="container-fluid">
+                <div class="row">
+                    <h5 class="text-center w-100">Indicators for Domains</h5>
+                </div>
+                <div class="row vh-100">
+                    <div class=" border mt-4 col-12 h-100">
+                            
+                            <svg id="vis4" class="h-75 col-12 mt-4">
+                            </svg>
+                            <h6 id="caption4" class="text-center">Overall</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row vh-100">
+            <div class="container-fluid">
+                <div class="row">
+                    <h5 class="text-center w-100">Violence against women</h5>
+                </div>
+                <div class="row vh-100">
+                    <div class=" border mt-4 col-6 h-100">
+                            
+                            <svg id="vis6" class="h-75 col-12 mt-4">
+                            </svg>
+                            <h6 id="caption7" class="text-center">Percent of women that have faced violence</h6>
+                    </div>
+                    <div class=" border mt-4 col-6 h-100">
+                            
+                            <svg id="vis7" class="h-75 col-12 mt-4">
+                            </svg>
+                            <h6 id="caption8" class="text-center">Awareness regarding violence against women</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        </div>
+    </div>
+    <input id="chosen_country" style="display:none;"></input>
+    <input id="chosen_country2" style="display:none;"></input>
+</body>
+</html>
